@@ -134,7 +134,7 @@ class CityGrid:
     
     
 if __name__=='__main__':
-    grid = CityGrid(5, 10, 0.3, towerRange = 2)
+    grid = CityGrid(21, 21, 0.3, towerRange = 5)
     
     gd = GridDrawer(grid.rowNumber, grid.columnNumber)
     gd.draw_grid()
