@@ -3,9 +3,10 @@ from typing import Tuple, List
 from draw import GridDrawer
 import matplotlib.pyplot as plt
 from numpy import Inf
-from random import random
+from random import random, seed, choice
 from math import sqrt, ceil
 
+seed(42)
 class CityGrid:
     
     towerPlased = []
@@ -18,7 +19,8 @@ class CityGrid:
         self.towerRange = towerRange
         
         # pl_points it is an area to plase tower around expected placment point
-        self.pl_points = [(i, j) for i in range(-towerRange, towerRange+1) for j in range(-towerRange, towerRange+1)]
+        playsment_range = 2*towerRange 
+        self.pl_points = [(i, j) for i in range(-playsment_range, playsment_range+1) for j in range(-playsment_range, playsment_range+1)]
         self.pl_points = sorted(self.pl_points, key=lambda x: (abs(x[0]), abs(x[1])))
         
         self.ratio = obstructedBlocksRatio
@@ -62,7 +64,7 @@ class CityGrid:
             RightDowni = tower.coords[0] + tower.range
             
         if tower.coords[1] + tower.range >= self.columnNumber:
-            RightDownj = self.columnNumber
+            RightDownj = self.columnNumber - 1 
         else:
             RightDownj = tower.coords[1] + tower.range
         tower.set_coverage((leftUpi, leftUpj), (RightDowni,RightDownj))
@@ -79,10 +81,12 @@ class CityGrid:
             
     
     def tower_placement(self) -> None:
+        count = 0
         while self.obstructedBlocks:
-            if l := len(self.obstructedBlocks) > 1:
-                cur_ob1 = self.obstructedBlocks[0]
-                cur_ob2 = self.obstructedBlocks[-1]
+            if (l := len(self.obstructedBlocks)) > 1:
+                
+                cur_ob1 = choice(self.obstructedBlocks)
+                cur_ob2 = choice(self.obstructedBlocks)
             
                 distance = sqrt((cur_ob2[0]- cur_ob1[0])**2 +(cur_ob2[0] - cur_ob1[1])**2) #Compute the distance between points to place tower
                 distToPlace = ceil(distance/2)
@@ -109,8 +113,11 @@ class CityGrid:
                     self.remove_covered(self.grid[placement_point[0]+point[0]][placement_point[1] + point[1]])
                     break  
             else:
+                if count > 3:
+                    break
                 if l < 2:
                     break
+                count += 1
     
     def set_tower_neighbor(self):
         l = len(self.towerPlased)
@@ -134,7 +141,7 @@ class CityGrid:
     
     
 if __name__=='__main__':
-    grid = CityGrid(21, 21, 0.3, towerRange = 5)
+    grid = CityGrid(5, 5, 0.9, towerRange = 1)
     
     gd = GridDrawer(grid.rowNumber, grid.columnNumber)
     gd.draw_grid()
@@ -147,8 +154,6 @@ if __name__=='__main__':
         gd.draw_a_square(towerC, cur_tower.coverage, plt.cm.viridis(i*20))   
     grid.set_tower_neighbor()
     
-    t1 = grid.towerPlased[0]
-    t2 = grid.towerPlased[-1]
     
     plt.show()
         
