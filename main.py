@@ -175,8 +175,11 @@ if __name__=='__main__':
     t1 = grid.grid[1][9]
     t2 = grid.grid[2][5]
     points = grid.connect_two(t1, t2)
-    for p in points:
-        gd.draw_a_line(p[0],p[1])
+    if points:
+        for p in points:
+            gd.draw_a_line(p[0],p[1])
+    else:
+        print('Can\'t find a way')
     
     
     plt.show()
