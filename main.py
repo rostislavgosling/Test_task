@@ -76,7 +76,7 @@ class CityGrid:
             if not ((tow.coverage[0][0] <= ob[0] <= tow.coverage[1][0]) and (tow.coverage[0][1] <= ob[1] <= tow.coverage[1][1])):
                 not_rem_ob.append(ob)
             else:
-                self.grid[ob[0]][ob[1]] = 2
+                self.grid[ob[0]][ob[1]] = 2 #place 2 if obstructedBlocks covered 
         self.obstructedBlocks = not_rem_ob
             
     
@@ -141,6 +141,7 @@ class CityGrid:
     def connect_two(self, tow1:Tower, tow2:Tower, prew_n = []):
         
         neighbors = tow1.neighbors.copy()
+        #sorting by distance between neighbors and final tower
         neighbors = sorted(neighbors, key = lambda x: sqrt((tow2.coords[0] - x[0])**2 + (tow2.coords[1] - x[1])**2))
         for ne in neighbors:
             
