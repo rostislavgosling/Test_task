@@ -138,10 +138,28 @@ class CityGrid:
                     nTower.set_neighbor(curTower.coords)
                 
             
-    
+    def connect_two(self, tow1:Tower, tow2:Tower, prew_n = []):
+        
+        neighbors = tow1.neighbors.copy()
+        neighbors = sorted(neighbors, key = lambda x: sqrt((tow2.coords[0] - x[0])**2 + (tow2.coords[1] - x[1])**2))
+        for ne in neighbors:
+            
+            if not ne in prew_n:
+                if ne == tow2.coords:
+                    return [(tow1.coords, tow2.coords)]
+                prew_n.append(tow1.coords)
+                next = self.connect_two(self.grid[ne[0]][ne[1]], tow2, prew_n)
+                
+                if next is not None:
+                    return [(tow1.coords, ne)] + next
+        return None
+        
+                
+            
+        
     
 if __name__=='__main__':
-    grid = CityGrid(5, 5, 0.9, towerRange = 1)
+    grid = CityGrid(15, 15, 0.3, towerRange = 1)
     
     gd = GridDrawer(grid.rowNumber, grid.columnNumber)
     gd.draw_grid()
@@ -153,6 +171,11 @@ if __name__=='__main__':
         cur_tower = grid.grid[towerC[0]][towerC[1]]
         gd.draw_a_square(towerC, cur_tower.coverage, plt.cm.viridis(i*20))   
     grid.set_tower_neighbor()
+    t1 = grid.grid[1][9]
+    t2 = grid.grid[2][5]
+    points = grid.connect_two(t1, t2)
+    for p in points:
+        gd.draw_a_line(p[0],p[1])
     
     
     plt.show()

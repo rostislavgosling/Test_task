@@ -30,10 +30,10 @@ class GridDrawer:
         height = -(y2 - y1)
         wh = 0.5
         
-        little =  Rectangle((middle[0] - wh/2, middle[1]+ wh/2), wh, -wh, color=color)
+        little =  Rectangle((middle[0] - wh/2, middle[1]+ wh/2), wh, -wh, edgecolor='black', color=color)
         self.ax.add_patch(little)
        
-        square = Rectangle((x_left_top, y_left_top), width, height, color=color, alpha = 0.3)
+        square = Rectangle((x_left_top, y_left_top), width, height, edgecolor='black', facecolor=color, alpha = 0.3)
         self.ax.add_patch(square)
     #drawing a obstructed block
     def draw_black(self, coords):
